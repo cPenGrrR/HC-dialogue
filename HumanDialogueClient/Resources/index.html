@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebRTC Video</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: #000;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" playsinline autoplay></video>
+
+<script>
+(() => {
+  const videoElem = document.getElementById('video');
+
+  let pc = null;
+  let audioTransceiver = null;
+  let localMicTrack = null;
+  let remoteStream = null;
+
+  function postToNative(payload) {
+    try {
+      const handler = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.hcRtc;
+      if (handler && typeof handler.postMessage === 'function') {
+        handler.postMessage(payload);
+      }
+    } catch (_) {}
+  }
+
+  function postEvent(event, extra = {}) {
+    postToNative({ event, ...extra });
+  }
+
+  function formatError(error) {
+    if (!error) return 'unknown error';
+    const name = error.name ? String(error.name) : 'Error';
+    const message = error.message ? String(error.message) : String(error);
+    return `${name}: ${message}`;
+  }
+
+  function postError(message, extra = {}) {
+    postEvent('error', { message, ...extra });
+  }
+
+  function emitMicrophoneState() {
+    postEvent('microphone', { enabled: !!(localMicTrack && localMicTrack.enabled) });
+  }
+
+  function describeCandidate(candidateStr) {
+    if (!candidateStr) return { type: 'unknown', hint: '' };
+
+    if (candidateStr.includes('198.18.') || candidateStr.includes('198.19.')) {
+      return {
+        type: 'test_or_virtual',
+        hint: 'candidate 命中了 198.18/198.19 网段，可能是 VPN/代理/虚拟网卡'
+      };
+    }
+
+    if (candidateStr.includes(' typ relay')) {
+      return { type: 'relay', hint: 'TURN relay candidate' };
+    }
+
+    if (candidateStr.includes(' typ srflx')) {
+      return { type: 'srflx', hint: 'STUN srflx candidate' };
+    }
+
+    if (candidateStr.includes('::') || candidateStr.includes('2001:') || candidateStr.includes('fd')) {
+      return { type: 'ipv6', hint: 'IPv6 host candidate，局域网场景下可能不通' };
+    }
+
+    if (candidateStr.includes(' 10.') || candidateStr.includes(' 192.168.') || candidateStr.includes(' 172.')) {
+      return { type: 'private_ipv4', hint: '内网 IPv4 candidate' };
+    }
+
+    return { type: 'other', hint: '' };
+  }
+
+  function attachRemoteTrackEvents() {
+    remoteStream = new MediaStream();
+
+    pc.addEventListener('track', (event) => {
+      remoteStream.addTrack(event.track);
+
+      postEvent('remoteTrack', {
+        kind: event.track.kind,
+        id: event.track.id,
+        readyState: event.track.readyState
+      });
+
+      event.track.onunmute = () => {
+        postEvent('status', {
+          status: 'remote-track-unmuted',
+          kind: event.track.kind,
+          id: event.track.id
+        });
+      };
+
+      event.track.onmute = () => {
+        postEvent('status', {
+          status: 'remote-track-muted',
+          kind: event.track.kind,
+          id: event.track.id
+        });
+      };
+
+      event.track.onended = () => {
+        postEvent('status', {
+          status: 'remote-track-ended',
+          kind: event.track.kind,
+          id: event.track.id
+        });
+      };
+
+      if (videoElem.srcObject !== remoteStream) {
+        videoElem.srcObject = remoteStream;
+      }
+
+      videoElem.play().catch(() => {});
+    });
+  }
+
+  function addTransceivers() {
+    pc.addTransceiver('video', { direction: 'recvonly' });
+    audioTransceiver = pc.addTransceiver('audio', { direction: 'sendrecv' });
+  }
+
+  function hasCandidateInSdp() {
+    return !!(pc && pc.localDescription && pc.localDescription.sdp && /a=candidate:/m.test(pc.localDescription.sdp));
+  }
+
+  async function waitForUsableIceCandidate(timeoutMs = 3000) {
+    if (!pc) throw new Error('PeerConnection not initialized');
+
+    if (hasCandidateInSdp()) {
+      postEvent('status', {
+        status: 'ice-candidate-ready',
+        mode: 'already-in-sdp'
+      });
+      return;
+    }
+
+    await new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        cleanup();
+        postEvent('status', {
+          status: 'ice-candidate-timeout',
+          timeoutMs,
+          hasCandidateInSdp: hasCandidateInSdp()
+        });
+        resolve();
+      }, timeoutMs);
+
+      function onIceCandidate(event) {
+        if (!event.candidate) return;
+
+        cleanup();
+
+        const candidateStr = event.candidate.candidate || '';
+        const info = describeCandidate(candidateStr);
+
+        postEvent('status', {
+          status: 'first-local-candidate-ready',
+          candidateType: info.type,
+          hint: info.hint
+        });
+
+        resolve();
+      }
+
+      function onIceGatheringStateChange() {
+        if (!pc) return;
+
+        postEvent('status', {
+          status: `ice-gathering-${pc.iceGatheringState}`
+        });
+
+        if (pc.iceGatheringState === 'complete') {
+          cleanup();
+          resolve();
+        }
+      }
+
+      function cleanup() {
+        clearTimeout(timer);
+        if (pc) {
+          pc.removeEventListener('icecandidate', onIceCandidate);
+          pc.removeEventListener('icegatheringstatechange', onIceGatheringStateChange);
+        }
+      }
+
+      pc.addEventListener('icecandidate', onIceCandidate);
+      pc.addEventListener('icegatheringstatechange', onIceGatheringStateChange);
+    });
+  }
+
+  function attachDebugEvents() {
+    pc.addEventListener('icecandidate', (event) => {
+      if (!event.candidate) {
+        postEvent('status', { status: 'local-candidate-gathering-finished' });
+        return;
+      }
+
+      const candidateStr = event.candidate.candidate || '';
+      const info = describeCandidate(candidateStr);
+
+      postEvent('candidate', {
+        candidate: candidateStr,
+        candidateType: info.type,
+        hint: info.hint
+      });
+    });
+
+    pc.addEventListener('icecandidateerror', (event) => {
+      postError('ICE candidate error', {
+        stage: 'icecandidateerror',
+        url: event.url,
+        address: event.address,
+        port: event.port,
+        errorCode: event.errorCode,
+        errorText: event.errorText
+      });
+    });
+
+    pc.addEventListener('icegatheringstatechange', () => {
+      if (!pc) return;
+      postEvent('status', { status: `iceGatheringState:${pc.iceGatheringState}` });
+    });
+
+    pc.addEventListener('iceconnectionstatechange', () => {
+      if (!pc) return;
+
+      postEvent('status', { status: `iceConnectionState:${pc.iceConnectionState}` });
+
+      if (pc.iceConnectionState === 'failed') {
+        postError('ICE 连接失败：candidate 不可达或 candidate pair 无法打通', {
+          stage: 'ice-connection-failed'
+        });
+      } else if (pc.iceConnectionState === 'disconnected') {
+        postEvent('status', { status: 'ice-disconnected' });
+      } else if (pc.iceConnectionState === 'connected') {
+        postEvent('status', { status: 'ice-connected' });
+      }
+    });
+
+    pc.addEventListener('signalingstatechange', () => {
+      if (!pc) return;
+      postEvent('status', { status: `signalingState:${pc.signalingState}` });
+    });
+
+    pc.addEventListener('connectionstatechange', () => {
+      if (!pc) return;
+
+      postEvent('status', { status: pc.connectionState });
+
+      if (['failed', 'closed', 'disconnected'].includes(pc.connectionState)) {
+        stopSession(true);
+      }
+    });
+  }
+
+  async function startSession() {
+    if (pc) return;
+
+    const offerEndpoint = window.__HC_OFFER_URL__ || '/offer';
+
+    try {
+      postEvent('status', {
+        status: 'starting',
+        offerURL: offerEndpoint,
+        online: navigator.onLine
+      });
+
+      pc = new RTCPeerConnection({
+        // 你现在验证通过的是 LAN only 逻辑，先不要加 Google STUN
+        iceServers: []
+
+        // 如果后面确认要恢复 STUN，可改回：
+        // iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      });
+
+      attachDebugEvents();
+      attachRemoteTrackEvents();
+      addTransceivers();
+
+      localMicTrack = null;
+      try {
+        const micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+
+        localMicTrack = micStream.getAudioTracks()[0];
+        localMicTrack.enabled = true;
+
+        await audioTransceiver.sender.replaceTrack(localMicTrack);
+
+        postEvent('status', {
+          status: 'microphone-ready',
+          label: localMicTrack.label || ''
+        });
+
+        emitMicrophoneState();
+      } catch (error) {
+        postEvent('status', {
+          status: `mic-unavailable: ${formatError(error)}`
+        });
+
+        postEvent('microphone', { enabled: false });
+
+        try {
+          await audioTransceiver.sender.replaceTrack(null);
+          audioTransceiver.direction = 'recvonly';
+        } catch (_) {}
+      }
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      postEvent('status', {
+        status: 'local-offer-created',
+        hasCandidateInSdp: hasCandidateInSdp()
+      });
+
+      // 关键改动：不再固定等 800ms
+      await waitForUsableIceCandidate(3000);
+
+      postEvent('status', {
+        status: 'sending-offer',
+        offerURL: offerEndpoint,
+        online: navigator.onLine,
+        hasCandidateInSdp: hasCandidateInSdp()
+      });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      let resp;
+      try {
+        resp = await fetch(offerEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(pc.localDescription),
+          signal: controller.signal
+        });
+      } catch (error) {
+        postError(`请求失败: ${formatError(error)}`, {
+          stage: 'fetch-offer',
+          offerURL: offerEndpoint,
+          online: navigator.onLine,
+          hint: '可能是网络不可达、CORS/OPTIONS预检未放行、或服务未启动'
+        });
+        await stopSession();
+        return;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      if (!resp.ok) {
+        let responseText = '';
+        try {
+          responseText = await resp.text();
+        } catch (_) {}
+
+        postError(`信令失败(${resp.status})`, {
+          stage: 'offer-response',
+          offerURL: offerEndpoint,
+          statusCode: resp.status,
+          responseSnippet: responseText.slice(0, 200)
+        });
+        await stopSession();
+        return;
+      }
+
+      let answer;
+      try {
+        answer = await resp.json();
+      } catch (error) {
+        postError(`信令响应JSON解析失败: ${formatError(error)}`, {
+          stage: 'answer-parse',
+          offerURL: offerEndpoint
+        });
+        await stopSession();
+        return;
+      }
+
+      try {
+        await pc.setRemoteDescription(answer);
+      } catch (error) {
+        postError(`设置远端描述失败: ${formatError(error)}`, {
+          stage: 'set-remote-description',
+          offerURL: offerEndpoint,
+          answerType: answer && answer.type ? String(answer.type) : 'unknown'
+        });
+        await stopSession();
+        return;
+      }
+
+      postEvent('started');
+      emitMicrophoneState();
+      videoElem.play().catch(() => {});
+    } catch (error) {
+      postError(`会话启动失败: ${formatError(error)}`, {
+        stage: 'start-session',
+        offerURL: offerEndpoint,
+        online: navigator.onLine
+      });
+      await stopSession();
+    }
+  }
+
+  async function stopSession(fromStateChange = false) {
+    try { localMicTrack && localMicTrack.stop(); } catch (_) {}
+
+    if (pc) {
+      pc.getSenders().forEach(s => {
+        try { s.track && s.track.stop(); } catch (_) {}
+        try { s.replaceTrack(null); } catch (_) {}
+      });
+
+      pc.getReceivers().forEach(r => {
+        try { r.track && r.track.stop(); } catch (_) {}
+      });
+
+      try { pc.close(); } catch (_) {}
+    }
+
+    if (remoteStream) {
+      remoteStream.getTracks().forEach(t => {
+        try { t.stop(); } catch (_) {}
+      });
+    }
+
+    videoElem.srcObject = null;
+    pc = null;
+    audioTransceiver = null;
+    localMicTrack = null;
+    remoteStream = null;
+
+    postEvent('microphone', { enabled: false });
+    postEvent('stopped');
+
+    if (!fromStateChange) {
+      postEvent('status', { status: 'stopped' });
+    }
+  }
+
+  function toggleMute() {
+    if (!localMicTrack) return;
+    localMicTrack.enabled = !localMicTrack.enabled;
+    emitMicrophoneState();
+  }
+
+  window.HCRTC = {
+    start: startSession,
+    stop: stopSession,
+    toggleMute: toggleMute
+  };
+
+  postEvent('ready');
+})();
+</script>
+</body>
+</html>

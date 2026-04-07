@@ -1,0 +1,701 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		705E2A0A2F66DD9B00BB208D /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */; };
+		705E2A1E2F69364800BB208D /* WebRTCSampleWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */; };
+		70A3E0EB2F7F9715004A068B /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 70A3E0EA2F7F9715004A068B /* index.html */; };
+		A00000000000000000000001 /* HumanDialogueClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* HumanDialogueClientApp.swift */; };
+		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* ContentView.swift */; };
+		A00000000000000000000004 /* DialogueState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000004 /* DialogueState.swift */; };
+		A00000000000000000000005 /* RecordedVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000005 /* RecordedVideo.swift */; };
+		A00000000000000000000006 /* ServerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000006 /* ServerConfig.swift */; };
+		A00000000000000000000007 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* NetworkService.swift */; };
+		A00000000000000000000008 /* RTCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* RTCService.swift */; };
+		A0000000000000000000000A /* VideoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000A /* VideoService.swift */; };
+		A0000000000000000000000B /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000B /* FileService.swift */; };
+		A0000000000000000000000C /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000C /* DialogueViewModel.swift */; };
+		A0000000000000000000000D /* VideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* VideoViewModel.swift */; };
+		A0000000000000000000000E /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000E /* SettingsViewModel.swift */; };
+		A0000000000000000000000F /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000F /* DialogueView.swift */; };
+		A00000000000000000000011 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000011 /* VideoListView.swift */; };
+		A00000000000000000000012 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* VideoPlayerView.swift */; };
+		A00000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* SettingsView.swift */; };
+		A00000000000000000000014 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* Constants.swift */; };
+		A00000000000000000000015 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000015 /* PermissionManager.swift */; };
+		A00000000000000000000016 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* Extensions.swift */; };
+		A00000000000000000000017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* Assets.xcassets */; };
+		A00000000000000000000018 /* Preview Content in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* Preview Content */; };
+		A00000000000000000000019 /* HumanDialogueClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* HumanDialogueClientTests.swift */; };
+		A0000000000000000000001A /* HumanDialogueClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* HumanDialogueClientUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D00000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F00000000000000000000001;
+			remoteInfo = HumanDialogueClient;
+		};
+		D00000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F00000000000000000000001;
+			remoteInfo = HumanDialogueClient;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCSampleWebView.swift; sourceTree = "<group>"; };
+		70A3E0EA2F7F9715004A068B /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		B00000000000000000000001 /* HumanDialogueClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumanDialogueClientApp.swift; sourceTree = "<group>"; };
+		B00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B00000000000000000000004 /* DialogueState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueState.swift; sourceTree = "<group>"; };
+		B00000000000000000000005 /* RecordedVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordedVideo.swift; sourceTree = "<group>"; };
+		B00000000000000000000006 /* ServerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfig.swift; sourceTree = "<group>"; };
+		B00000000000000000000007 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		B00000000000000000000008 /* RTCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCService.swift; sourceTree = "<group>"; };
+		B0000000000000000000000A /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
+		B0000000000000000000000B /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		B0000000000000000000000C /* DialogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueViewModel.swift; sourceTree = "<group>"; };
+		B0000000000000000000000D /* VideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewModel.swift; sourceTree = "<group>"; };
+		B0000000000000000000000E /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		B0000000000000000000000F /* DialogueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
+		B00000000000000000000011 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
+		B00000000000000000000012 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		B00000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B00000000000000000000014 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		B00000000000000000000015 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		B00000000000000000000016 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		B00000000000000000000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B00000000000000000000018 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B00000000000000000000019 /* Preview Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Preview Content"; sourceTree = "<group>"; };
+		B0000000000000000000001A /* HumanDialogueClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumanDialogueClientTests.swift; sourceTree = "<group>"; };
+		B0000000000000000000001B /* HumanDialogueClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumanDialogueClientUITests.swift; sourceTree = "<group>"; };
+		B0000000000000000000001C /* HumanDialogueClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HumanDialogueClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0000000000000000000001D /* HumanDialogueClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HumanDialogueClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0000000000000000000001E /* HumanDialogueClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HumanDialogueClientUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C00000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E00000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				E00000000000000000000003 /* HumanDialogueClient */,
+				E0000000000000000000000D /* Tests */,
+				E0000000000000000000000E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E00000000000000000000003 /* HumanDialogueClient */ = {
+			isa = PBXGroup;
+			children = (
+				E00000000000000000000004 /* App */,
+				E00000000000000000000005 /* Models */,
+				E00000000000000000000006 /* Services */,
+				E00000000000000000000007 /* ViewModels */,
+				E00000000000000000000008 /* Views */,
+				E00000000000000000000009 /* Utils */,
+				E0000000000000000000000A /* Resources */,
+			);
+			path = HumanDialogueClient;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000004 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000001 /* HumanDialogueClientApp.swift */,
+				B00000000000000000000002 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000005 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000004 /* DialogueState.swift */,
+				B00000000000000000000005 /* RecordedVideo.swift */,
+				B00000000000000000000006 /* ServerConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000006 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000007 /* NetworkService.swift */,
+				B00000000000000000000008 /* RTCService.swift */,
+				B0000000000000000000000A /* VideoService.swift */,
+				B0000000000000000000000B /* FileService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000007 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000000C /* DialogueViewModel.swift */,
+				B0000000000000000000000D /* VideoViewModel.swift */,
+				B0000000000000000000000E /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000008 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000000F /* DialogueView.swift */,
+				B00000000000000000000011 /* VideoListView.swift */,
+				B00000000000000000000012 /* VideoPlayerView.swift */,
+				B00000000000000000000013 /* SettingsView.swift */,
+				705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */,
+				705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E00000000000000000000009 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000014 /* Constants.swift */,
+				B00000000000000000000015 /* PermissionManager.swift */,
+				B00000000000000000000016 /* Extensions.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		E0000000000000000000000A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000017 /* Assets.xcassets */,
+				B00000000000000000000018 /* Info.plist */,
+				B00000000000000000000019 /* Preview Content */,
+				70A3E0EA2F7F9715004A068B /* index.html */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E0000000000000000000000D /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000001A /* HumanDialogueClientTests.swift */,
+				B0000000000000000000001B /* HumanDialogueClientUITests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		E0000000000000000000000E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000001C /* HumanDialogueClient.app */,
+				B0000000000000000000001D /* HumanDialogueClientTests.xctest */,
+				B0000000000000000000001E /* HumanDialogueClientUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F00000000000000000000001 /* HumanDialogueClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G00000000000000000000001 /* Build configuration list for PBXNativeTarget "HumanDialogueClient" */;
+			buildPhases = (
+				C00000000000000000000004 /* Sources */,
+				C00000000000000000000001 /* Frameworks */,
+				C00000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HumanDialogueClient;
+			productName = HumanDialogueClient;
+			productReference = B0000000000000000000001C /* HumanDialogueClient.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F00000000000000000000002 /* HumanDialogueClientTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G00000000000000000000002 /* Build configuration list for PBXNativeTarget "HumanDialogueClientTests" */;
+			buildPhases = (
+				C00000000000000000000006 /* Sources */,
+				C00000000000000000000002 /* Frameworks */,
+				C00000000000000000000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				H00000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = HumanDialogueClientTests;
+			productName = HumanDialogueClientTests;
+			productReference = B0000000000000000000001D /* HumanDialogueClientTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F00000000000000000000003 /* HumanDialogueClientUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G00000000000000000000003 /* Build configuration list for PBXNativeTarget "HumanDialogueClientUITests" */;
+			buildPhases = (
+				C00000000000000000000008 /* Sources */,
+				C00000000000000000000003 /* Frameworks */,
+				C00000000000000000000009 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				H00000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = HumanDialogueClientUITests;
+			productName = HumanDialogueClientUITests;
+			productReference = B0000000000000000000001E /* HumanDialogueClientUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					F00000000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					F00000000000000000000002 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = F00000000000000000000001;
+					};
+					F00000000000000000000003 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = F00000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = G00000000000000000000004 /* Build configuration list for PBXProject "HC dialogue" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E00000000000000000000002;
+			productRefGroup = E0000000000000000000000E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F00000000000000000000001 /* HumanDialogueClient */,
+				F00000000000000000000002 /* HumanDialogueClientTests */,
+				F00000000000000000000003 /* HumanDialogueClientUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C00000000000000000000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70A3E0EB2F7F9715004A068B /* index.html in Resources */,
+				A00000000000000000000017 /* Assets.xcassets in Resources */,
+				A00000000000000000000018 /* Preview Content in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000009 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C00000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000001 /* HumanDialogueClientApp.swift in Sources */,
+				A00000000000000000000002 /* ContentView.swift in Sources */,
+				A00000000000000000000004 /* DialogueState.swift in Sources */,
+				A00000000000000000000005 /* RecordedVideo.swift in Sources */,
+				A00000000000000000000006 /* ServerConfig.swift in Sources */,
+				A00000000000000000000007 /* NetworkService.swift in Sources */,
+				A00000000000000000000008 /* RTCService.swift in Sources */,
+				A0000000000000000000000A /* VideoService.swift in Sources */,
+				A0000000000000000000000B /* FileService.swift in Sources */,
+				A0000000000000000000000C /* DialogueViewModel.swift in Sources */,
+				A0000000000000000000000D /* VideoViewModel.swift in Sources */,
+				A0000000000000000000000E /* SettingsViewModel.swift in Sources */,
+				A0000000000000000000000F /* DialogueView.swift in Sources */,
+				705E2A1E2F69364800BB208D /* WebRTCSampleWebView.swift in Sources */,
+				A00000000000000000000011 /* VideoListView.swift in Sources */,
+				A00000000000000000000012 /* VideoPlayerView.swift in Sources */,
+				705E2A0A2F66DD9B00BB208D /* CameraPreviewView.swift in Sources */,
+				A00000000000000000000013 /* SettingsView.swift in Sources */,
+				A00000000000000000000014 /* Constants.swift in Sources */,
+				A00000000000000000000015 /* PermissionManager.swift in Sources */,
+				A00000000000000000000016 /* Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000019 /* HumanDialogueClientTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00000000000000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0000000000000000000001A /* HumanDialogueClientUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		H00000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F00000000000000000000001 /* HumanDialogueClient */;
+			targetProxy = D00000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		H00000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F00000000000000000000001 /* HumanDialogueClient */;
+			targetProxy = D00000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		I00000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		I00000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		I00000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HumanDialogueClient/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClient;
+				PRODUCT_NAME = HumanDialogueClient;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		I00000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HumanDialogueClient/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClient;
+				PRODUCT_NAME = HumanDialogueClient;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		I00000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClientTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HumanDialogueClient.app/HumanDialogueClient";
+			};
+			name = Debug;
+		};
+		I00000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClientTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HumanDialogueClient.app/HumanDialogueClient";
+			};
+			name = Release;
+		};
+		I00000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClientUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HumanDialogueClient;
+			};
+			name = Debug;
+		};
+		I00000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3R5C6JV5B8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = syiomii.HumanDialogueClientUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HumanDialogueClient;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		G00000000000000000000001 /* Build configuration list for PBXNativeTarget "HumanDialogueClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				I00000000000000000000003 /* Debug */,
+				I00000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G00000000000000000000002 /* Build configuration list for PBXNativeTarget "HumanDialogueClientTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				I00000000000000000000005 /* Debug */,
+				I00000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G00000000000000000000003 /* Build configuration list for PBXNativeTarget "HumanDialogueClientUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				I00000000000000000000007 /* Debug */,
+				I00000000000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G00000000000000000000004 /* Build configuration list for PBXProject "HC dialogue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				I00000000000000000000001 /* Debug */,
+				I00000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E00000000000000000000001 /* Project object */;
+}

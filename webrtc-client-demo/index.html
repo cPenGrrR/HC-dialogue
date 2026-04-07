@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>RTC Video Page</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        #remoteVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        #status {
+            position: fixed;
+            left: 12px;
+            top: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 12px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="status">connecting</div>
+    <video id="remoteVideo" autoplay playsinline></video>
+
+    <script>
+        const defaultConfig = {
+            signalingUrl: "ws://127.0.0.1:9000/ws",
+            roomId: "demo-room",
+            token: "demo-token",
+            iceServers: [
+                { urls: ["stun:stun.l.google.com:19302"] }
+            ]
+        };
+
+        const statusLabel = document.getElementById("status");
+        const remoteVideo = document.getElementById("remoteVideo");
+
+        let socket = null;
+        let peerConnection = null;
+        let localAudioStream = null;
+        let shouldCreateOffer = true;
+        let rtcConfig = { ...defaultConfig };
+        let sessionStarting = false;
+
+        function postToSwift(event, payload = {}) {
+            const handler = window.webkit?.messageHandlers?.rtcEvent;
+            if (!handler) {
+                return;
+            }
+
+            handler.postMessage({
+                event,
+                ...payload
+            });
+        }
+
+        function log(message, payload) {
+            if (payload) {
+                console.log("[rtc-page]", message, payload);
+                return;
+            }
+            console.log("[rtc-page]", message);
+        }
+
+        function setStatus(text) {
+            statusLabel.textContent = text;
+            log("status", { text });
+            postToSwift("status", { status: text });
+        }
+
+        async function prepareLocalAudio() {
+            localAudioStream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: false
+            });
+        }
+
+        function sendSignal(message) {
+            if (!socket || socket.readyState !== WebSocket.OPEN) {
+                throw new Error("signaling socket is not open");
+            }
+
+            socket.send(JSON.stringify(message));
+            log("sent signal", { type: message.type });
+        }
+
+        function createPeerConnection() {
+            peerConnection = new RTCPeerConnection({
+                sdpSemantics: "unified-plan",
+                iceServers: rtcConfig.iceServers
+            });
+
+            localAudioStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localAudioStream);
+            });
+
+            peerConnection.addEventListener("track", event => {
+                const [stream] = event.streams;
+                if (stream) {
+                    remoteVideo.srcObject = stream;
+                    setStatus("streaming");
+                }
+                log("received track", { kind: event.track.kind });
+                postToSwift("remoteTrack", { kind: event.track.kind });
+            });
+
+            peerConnection.addEventListener("icecandidate", event => {
+                if (!event.candidate) {
+                    return;
+                }
+
+                sendSignal({
+                    type: "ice-candidate",
+                    roomId: rtcConfig.roomId,
+                    candidate: event.candidate
+                });
+            });
+
+            peerConnection.addEventListener("connectionstatechange", () => {
+                setStatus(peerConnection.connectionState);
+            });
+        }
+
+        function openSocket() {
+            return new Promise((resolve, reject) => {
+                socket = new WebSocket(rtcConfig.signalingUrl);
+
+                socket.addEventListener("open", () => {
+                    log("signaling connected");
+                    postToSwift("signalingOpen");
+                    resolve();
+                }, { once: true });
+
+                socket.addEventListener("error", () => {
+                    postToSwift("signalingError");
+                    reject(new Error("signaling error"));
+                }, { once: true });
+
+                socket.addEventListener("close", () => {
+                    setStatus("closed");
+                    postToSwift("signalingClosed");
+                });
+
+                socket.addEventListener("message", async event => {
+                    try {
+                        const message = JSON.parse(event.data);
+                        await handleSignal(message);
+                    } catch (error) {
+                        setStatus("error");
+                        log("message handling failed", { error: error.message });
+                        postToSwift("error", { message: error.message });
+                    }
+                });
+            });
+        }
+
+        async function joinSession() {
+            sendSignal({
+                type: "join",
+                roomId: rtcConfig.roomId,
+                token: rtcConfig.token
+            });
+
+            if (shouldCreateOffer) {
+                const offer = await peerConnection.createOffer({
+                    offerToReceiveAudio: true,
+                    offerToReceiveVideo: true
+                });
+                await peerConnection.setLocalDescription(offer);
+                sendSignal({
+                    type: "offer",
+                    roomId: rtcConfig.roomId,
+                    sdp: offer.sdp
+                });
+            }
+        }
+
+        async function handleSignal(message) {
+            log("received signal", { type: message.type });
+
+            switch (message.type) {
+            case "joined":
+                if (typeof message.shouldCreateOffer === "boolean") {
+                    shouldCreateOffer = message.shouldCreateOffer;
+                }
+                break;
+            case "offer": {
+                const offer = new RTCSessionDescription({
+                    type: "offer",
+                    sdp: message.sdp
+                });
+                await peerConnection.setRemoteDescription(offer);
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                sendSignal({
+                    type: "answer",
+                    roomId: rtcConfig.roomId,
+                    sdp: answer.sdp
+                });
+                break;
+            }
+            case "answer": {
+                const answer = new RTCSessionDescription({
+                    type: "answer",
+                    sdp: message.sdp
+                });
+                await peerConnection.setRemoteDescription(answer);
+                break;
+            }
+            case "ice-candidate":
+                if (message.candidate) {
+                    await peerConnection.addIceCandidate(message.candidate);
+                }
+                break;
+            case "leave":
+                await stopSession();
+                break;
+            case "error":
+                throw new Error(message.message || "server error");
+            default:
+                log("ignored signal", { type: message.type });
+            }
+        }
+
+        async function stopSession() {
+            if (socket) {
+                socket.close();
+                socket = null;
+            }
+
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+
+            if (localAudioStream) {
+                localAudioStream.getTracks().forEach(track => track.stop());
+                localAudioStream = null;
+            }
+
+            remoteVideo.srcObject = null;
+            shouldCreateOffer = true;
+            sessionStarting = false;
+            setStatus("stopped");
+            postToSwift("stopped");
+        }
+
+        async function startSession() {
+            if (sessionStarting || peerConnection || socket) {
+                return;
+            }
+
+            try {
+                sessionStarting = true;
+                setStatus("preparing");
+                await prepareLocalAudio();
+                createPeerConnection();
+                await openSocket();
+                await joinSession();
+                setStatus("connecting");
+                postToSwift("started");
+            } catch (error) {
+                setStatus("error");
+                log("start session failed", { error: error.message });
+                postToSwift("error", { message: error.message });
+                await stopSession();
+            } finally {
+                sessionStarting = false;
+            }
+        }
+
+        function updateConfig(nextConfig = {}) {
+            rtcConfig = {
+                ...defaultConfig,
+                ...nextConfig,
+                iceServers: Array.isArray(nextConfig.iceServers) ? nextConfig.iceServers : defaultConfig.iceServers
+            };
+            postToSwift("configUpdated", {
+                signalingUrl: rtcConfig.signalingUrl,
+                roomId: rtcConfig.roomId
+            });
+        }
+
+        window.rtcPage = {
+            configure(nextConfig) {
+                updateConfig(nextConfig);
+            },
+            async start(nextConfig) {
+                if (nextConfig) {
+                    updateConfig(nextConfig);
+                }
+                await startSession();
+            },
+            async stop() {
+                await stopSession();
+            },
+            getState() {
+                return {
+                    status: statusLabel.textContent,
+                    roomId: rtcConfig.roomId,
+                    signalingUrl: rtcConfig.signalingUrl,
+                    isConnected: Boolean(peerConnection || socket)
+                };
+            }
+        };
+
+        setStatus("idle");
+        postToSwift("ready");
+    </script>
+</body>
+</html>
