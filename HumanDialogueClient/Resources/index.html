@@ -47,6 +47,15 @@
     postToNative({ event, ...extra });
   }
 
+  function hasNativeBridge() {
+    return !!(
+      window.webkit &&
+      window.webkit.messageHandlers &&
+      window.webkit.messageHandlers.hcRtc &&
+      typeof window.webkit.messageHandlers.hcRtc.postMessage === 'function'
+    );
+  }
+
   function formatError(error) {
     if (!error) return 'unknown error';
     const name = error.name ? String(error.name) : 'Error';
@@ -345,56 +354,71 @@
         hasCandidateInSdp: hasCandidateInSdp()
       });
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-      let resp;
-      try {
-        resp = await fetch(offerEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(pc.localDescription),
-          signal: controller.signal
-        });
-      } catch (error) {
-        postError(`请求失败: ${formatError(error)}`, {
-          stage: 'fetch-offer',
-          offerURL: offerEndpoint,
-          online: navigator.onLine,
-          hint: '可能是网络不可达、CORS/OPTIONS预检未放行、或服务未启动'
-        });
-        await stopSession();
-        return;
-      } finally {
-        clearTimeout(timeoutId);
-      }
-
-      if (!resp.ok) {
-        let responseText = '';
-        try {
-          responseText = await resp.text();
-        } catch (_) {}
-
-        postError(`信令失败(${resp.status})`, {
-          stage: 'offer-response',
-          offerURL: offerEndpoint,
-          statusCode: resp.status,
-          responseSnippet: responseText.slice(0, 200)
-        });
-        await stopSession();
-        return;
-      }
-
       let answer;
-      try {
-        answer = await resp.json();
-      } catch (error) {
-        postError(`信令响应JSON解析失败: ${formatError(error)}`, {
-          stage: 'answer-parse',
-          offerURL: offerEndpoint
-        });
-        await stopSession();
-        return;
+      if (hasNativeBridge()) {
+        try {
+          answer = await requestNativeAnswer(pc.localDescription, offerEndpoint);
+        } catch (error) {
+          postError(`原生信令请求失败: ${formatError(error)}`, {
+            stage: 'native-signal-offer',
+            offerURL: offerEndpoint,
+            online: navigator.onLine,
+            hint: '请检查 RTC Offer URL、网络连通性、以及服务端是否正常返回 answer JSON'
+          });
+          await stopSession();
+          return;
+        }
+      } else {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        let resp;
+        try {
+          resp = await fetch(offerEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pc.localDescription),
+            signal: controller.signal
+          });
+        } catch (error) {
+          postError(`请求失败: ${formatError(error)}`, {
+            stage: 'fetch-offer',
+            offerURL: offerEndpoint,
+            online: navigator.onLine,
+            hint: '可能是网络不可达、CORS/OPTIONS预检未放行、或服务未启动'
+          });
+          await stopSession();
+          return;
+        } finally {
+          clearTimeout(timeoutId);
+        }
+
+        if (!resp.ok) {
+          let responseText = '';
+          try {
+            responseText = await resp.text();
+          } catch (_) {}
+
+          postError(`信令失败(${resp.status})`, {
+            stage: 'offer-response',
+            offerURL: offerEndpoint,
+            statusCode: resp.status,
+            responseSnippet: responseText.slice(0, 200)
+          });
+          await stopSession();
+          return;
+        }
+
+        try {
+          answer = await resp.json();
+        } catch (error) {
+          postError(`信令响应JSON解析失败: ${formatError(error)}`, {
+            stage: 'answer-parse',
+            offerURL: offerEndpoint
+          });
+          await stopSession();
+          return;
+        }
       }
 
       try {
@@ -464,10 +488,52 @@
     emitMicrophoneState();
   }
 
+  let nextNativeSignalRequestID = 1;
+  const pendingNativeSignalRequests = new Map();
+
+  function requestNativeAnswer(localDescription, offerURL) {
+    return new Promise((resolve, reject) => {
+      if (!hasNativeBridge()) {
+        reject(new Error('Native bridge unavailable'));
+        return;
+      }
+
+      const serializedDescription = localDescription ? {
+        type: localDescription.type ? String(localDescription.type) : '',
+        sdp: localDescription.sdp ? String(localDescription.sdp) : ''
+      } : null;
+
+      const requestID = nextNativeSignalRequestID++;
+      pendingNativeSignalRequests.set(requestID, { resolve, reject });
+
+      postToNative({
+        event: 'signalOffer',
+        requestID,
+        offerURL,
+        localDescription: serializedDescription
+      });
+    });
+  }
+
+  function resolveNativeSignalRequest(requestID, payload) {
+    const pending = pendingNativeSignalRequests.get(requestID);
+    if (!pending) return;
+
+    pendingNativeSignalRequests.delete(requestID);
+
+    if (payload && payload.error) {
+      pending.reject(new Error(String(payload.error)));
+      return;
+    }
+
+    pending.resolve(payload ? payload.answer : null);
+  }
+
   window.HCRTC = {
     start: startSession,
     stop: stopSession,
-    toggleMute: toggleMute
+    toggleMute: toggleMute,
+    receiveNativeSignalResult: resolveNativeSignalRequest
   };
 
   window.addEventListener('beforeunload', () => {
