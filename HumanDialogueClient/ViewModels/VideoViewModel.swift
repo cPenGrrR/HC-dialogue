@@ -9,6 +9,9 @@ final class VideoViewModel: ObservableObject {
     @Published var uploadingVideoID: UUID?
     @Published var successMessage = ""
     @Published var errorMessage = ""
+    @Published var modelName = ""
+    @Published private(set) var uploadProgress: Double = 0
+    @Published private(set) var uploadLogs: [String] = []
 
     private let videoService: VideoService
     private let fileService: FileService
@@ -46,6 +49,10 @@ final class VideoViewModel: ObservableObject {
 
     var previewSession: AVCaptureSession {
         videoService.captureSession
+    }
+
+    var canUpload: Bool {
+        uploadingVideoID == nil && !modelName.trimmed.isEmpty
     }
 
     func preparePreview() async {
@@ -107,13 +114,34 @@ final class VideoViewModel: ObservableObject {
     func uploadVideo(_ video: RecordedVideo) async {
         errorMessage = ""
         successMessage = ""
+
+        let trimmedModelName = modelName.trimmed
+        guard !trimmedModelName.isEmpty else {
+            errorMessage = "请先输入 Avatar 名称"
+            return
+        }
+
         uploadingVideoID = video.id
+        uploadProgress = 0
+        uploadLogs = []
+        appendUploadLog("开始处理视频: \(video.fileName)")
 
         do {
-            try await networkService.uploadVideo(fileURL: video.fileURL)
-            successMessage = "已上传 \(video.fileName)"
+            let result = try await networkService.uploadAndTrainVideo(
+                fileURL: video.fileURL,
+                modelName: trimmedModelName
+            ) { [weak self] progress, message in
+                Task { @MainActor in
+                    self?.uploadProgress = progress
+                    self?.appendUploadLog(message)
+                }
+            }
+
+            successMessage = "上传并训练已提交：\(result.modelName) v\(result.modelVersion)"
+            appendUploadLog("任务完成，upload_id: \(result.uploadID)")
         } catch {
             errorMessage = "上传失败：\(error.localizedDescription)"
+            appendUploadLog("错误：\(error.localizedDescription)")
         }
 
         uploadingVideoID = nil
@@ -134,12 +162,13 @@ final class VideoViewModel: ObservableObject {
             self?.isPreviewRunning = isPreviewRunning
         }
 
-        //videoService.onError = { [weak self] message in
-        //    self?.errorMessage = message
-        //}
-
         videoService.onRecordingFinished = { [weak self] _ in
             self?.loadVideos()
         }
+    }
+
+    private func appendUploadLog(_ message: String) {
+        let timestamp = DateFormatter.displayFormatter.string(from: Date())
+        uploadLogs.append("[\(timestamp)] \(message)")
     }
 }

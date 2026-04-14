@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		705E2A0A2F66DD9B00BB208D /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */; };
 		705E2A1E2F69364800BB208D /* WebRTCSampleWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */; };
+		709EBB8A2F8E2734003F1C94 /* index_2.html in Resources */ = {isa = PBXBuildFile; fileRef = 709EBB892F8E2734003F1C94 /* index_2.html */; };
 		70A3E0EB2F7F9715004A068B /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 70A3E0EA2F7F9715004A068B /* index.html */; };
 		A00000000000000000000001 /* HumanDialogueClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* HumanDialogueClientApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* ContentView.swift */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCSampleWebView.swift; sourceTree = "<group>"; };
+		709EBB892F8E2734003F1C94 /* index_2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index_2.html; sourceTree = "<group>"; };
 		70A3E0EA2F7F9715004A068B /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B00000000000000000000001 /* HumanDialogueClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumanDialogueClientApp.swift; sourceTree = "<group>"; };
 		B00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 		E00000000000000000000003 /* HumanDialogueClient */ = {
 			isa = PBXGroup;
 			children = (
+				709EBB892F8E2734003F1C94 /* index_2.html */,
 				E00000000000000000000004 /* App */,
 				E00000000000000000000005 /* Models */,
 				E00000000000000000000006 /* Services */,
@@ -330,6 +333,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				709EBB8A2F8E2734003F1C94 /* index_2.html in Resources */,
 				70A3E0EB2F7F9715004A068B /* index.html in Resources */,
 				A00000000000000000000017 /* Assets.xcassets in Resources */,
 				A00000000000000000000018 /* Preview Content in Resources */,

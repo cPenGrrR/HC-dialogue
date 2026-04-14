@@ -23,7 +23,7 @@
   </style>
 </head>
 <body>
-  <video id="video" playsinline autoplay></video>
+  <video id="video" playsinline autoplay controls></video>
 
 <script>
 (() => {
@@ -287,11 +287,7 @@
       });
 
       pc = new RTCPeerConnection({
-        // 你现在验证通过的是 LAN only 逻辑，先不要加 Google STUN
-        iceServers: []
-
-        // 如果后面确认要恢复 STUN，可改回：
-        // iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       });
 
       attachDebugEvents();
@@ -340,8 +336,7 @@
         hasCandidateInSdp: hasCandidateInSdp()
       });
 
-      // 关键改动：不再固定等 800ms
-      await waitForUsableIceCandidate(3000);
+      await waitForUsableIceCandidate(800);
 
       postEvent('status', {
         status: 'sending-offer',
@@ -474,6 +469,10 @@
     stop: stopSession,
     toggleMute: toggleMute
   };
+
+  window.addEventListener('beforeunload', () => {
+    stopSession();
+  });
 
   postEvent('ready');
 })();

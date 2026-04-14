@@ -27,6 +27,35 @@ struct VideoListView: View {
                 }
             }
 
+            Section("上传训练") {
+                TextField("Avatar 名称 (modelName)", text: $viewModel.modelName)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                if viewModel.uploadingVideoID != nil {
+                    ProgressView(value: viewModel.uploadProgress) {
+                        Text("上传进度")
+                    }
+                    Text("\(Int(viewModel.uploadProgress * 100))%")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if !viewModel.uploadLogs.isEmpty {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(Array(viewModel.uploadLogs.enumerated()), id: \.offset) { _, log in
+                                Text(log)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                    .frame(height: 120)
+                }
+            }
+
             Section("本地视频") {
                 if viewModel.videos.isEmpty {
                     ContentUnavailableView("暂无本地视频", systemImage: "film")
@@ -54,13 +83,13 @@ struct VideoListView: View {
                             }
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                            Button(viewModel.uploadingVideoID == video.id ? "上传中" : "上传") {
+                            Button(viewModel.uploadingVideoID == video.id ? "上传中" : "上传并训练") {
                                 Task {
                                     await viewModel.uploadVideo(video)
                                 }
                             }
                             .tint(.blue)
-                            .disabled(viewModel.uploadingVideoID != nil)
+                            .disabled(!viewModel.canUpload)
                         }
                     }
                     .onDelete { indexSet in

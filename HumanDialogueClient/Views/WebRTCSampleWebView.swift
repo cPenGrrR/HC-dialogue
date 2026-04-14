@@ -26,6 +26,9 @@ struct WebRTCSampleWebView: UIViewRepresentable {
         configuration.userContentController = userContentController
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        }
         webView.scrollView.isScrollEnabled = true
         webView.uiDelegate = context.coordinator
         webView.navigationDelegate = context.coordinator
