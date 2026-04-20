@@ -54,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		704CFCE52F95D7CB00CFDD83 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		705E2A092F66DD9B00BB208D /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		705E2A1D2F69364800BB208D /* WebRTCSampleWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCSampleWebView.swift; sourceTree = "<group>"; };
 		709EBB892F8E2734003F1C94 /* index_2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index_2.html; sourceTree = "<group>"; };
@@ -118,6 +119,7 @@
 				E00000000000000000000003 /* HumanDialogueClient */,
 				E0000000000000000000000D /* Tests */,
 				E0000000000000000000000E /* Products */,
+				704CFCE52F95D7CB00CFDD83 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
